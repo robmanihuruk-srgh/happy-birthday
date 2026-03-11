@@ -88,8 +88,8 @@
 
         /* Update: Lingkaran menjadi Bingkai Foto */
         .photo-frame {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             border: 3px solid var(--gold-accent);
             margin: 20px auto 10px;
@@ -106,7 +106,7 @@
             object-fit: cover;
         }
 
-        /* Style untuk Teks Umur di bawah foto */
+        /* Teks Umur di bawah foto */
         .age-text {
             font-size: 2.5rem;
             font-family: 'Playfair Display', serif;
@@ -192,7 +192,7 @@
             <h1>Selamat Ulang Tahun</h1>
             
             <div class="photo-frame">
-                <img src="foto_st_edward_purba.jpg" alt="St. Edward Purba">
+                <img src="angel-manurung.jpeg" alt="Profil">
             </div>
 
             <div class="age-text" id="age-display">XX</div>
@@ -229,8 +229,8 @@
 
     <script>
         const config = {
-            nama: "St. Edward Purba",
-            umur: "59", // Saya isikan 60 sebagai contoh, silakan ubah di sini
+            nama: "Angel Manurung",
+            umur: "25", // Sesuaikan umur di sini
             pengirim: "St. Robert Manihuruk"
         };
 
@@ -250,9 +250,7 @@
             music.muted = false;
             var promise = music.play();
             if (promise !== undefined) {
-                promise.then(_ => {
-                    console.log("Musik dimulai.");
-                }).catch(error => {
+                promise.then(_ => {}).catch(error => {
                     console.log("Autoplay dicegah.");
                 });
             }
