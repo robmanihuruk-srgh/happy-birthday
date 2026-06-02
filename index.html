@@ -1,267 +1,747 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ucapan Ulang Tahun - Elegan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:ital,wght@1,500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --deep-blue: #0f2027;
-            --mid-blue: #203a43;
-            --silver: #c0c0c0;
-            --gold-accent: #ffd700;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Arisan • Girsang Boru Panagolan Tangerang</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --merah:#9e1b1b;        /* merah ulos */
+  --merah-tua:#6e0f0f;
+  --emas:#d4a437;          /* emas gorga */
+  --emas-terang:#f0cd6b;
+  --hitam:#1a1410;         /* hitam pekat tanah */
+  --hitam-2:#241c16;
+  --krem:#f5ecd9;          /* kapur/benang putih ulos */
+  --krem-2:#eaddc2;
+  --hijau:#2f5d4f;         /* aksen daun sirih */
+  --txt:#efe5d0;
+  --shadow:0 20px 50px rgba(0,0,0,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(212,164,55,.10), transparent 40%),
+    radial-gradient(circle at 88% 92%, rgba(158,27,27,.18), transparent 45%),
+    var(--hitam);
+  color:var(--txt);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(to right, var(--deep-blue), var(--mid-blue));
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+/* ====== Motif gorga garis tepi ====== */
+.gorga-band{
+  height:14px;width:100%;
+  background:
+    repeating-linear-gradient(135deg,var(--emas) 0 10px,var(--merah) 10px 20px,var(--hitam) 20px 30px);
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+}
 
-        .card-frame {
-            width: 90%;
-            max-width: 500px;
-            height: 80vh;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-        }
+/* ====== Container ====== */
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
 
-        .card-frame::before {
-            content: '';
-            position: absolute;
-            top: 10px; left: 10px; right: 10px; bottom: 10px;
-            border: 2px solid var(--silver);
-            border-radius: 15px;
-            pointer-events: none;
-        }
+/* ====== HERO ====== */
+.hero{
+  position:relative;text-align:center;
+  padding:60px 20px 50px;
+  background:
+    linear-gradient(180deg, rgba(110,15,15,.55), rgba(26,20,16,.92)),
+    repeating-linear-gradient(45deg, rgba(212,164,55,.05) 0 2px, transparent 2px 16px);
+  border-bottom:3px solid var(--emas);
+  overflow:hidden;
+}
+.hero::before,.hero::after{
+  content:"";position:absolute;top:0;width:120px;height:100%;
+  background:repeating-linear-gradient(0deg,var(--emas) 0 8px,transparent 8px 26px);
+  opacity:.14;
+}
+.hero::before{left:0}
+.hero::after{right:0}
+.crest{
+  width:96px;height:96px;margin:0 auto 18px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--emas-terang), var(--emas) 55%, var(--merah-tua));
+  display:flex;align-items:center;justify-content:center;
+  font-size:46px;
+  border:3px solid var(--krem);
+  box-shadow:0 0 0 6px rgba(212,164,55,.25), var(--shadow);
+  position:relative;z-index:2;cursor:pointer;user-select:none;
+  transition:transform .12s;
+}
+.crest:active{transform:scale(.93)}
+.hero .eyebrow{
+  font-family:'Cinzel',serif;
+  letter-spacing:.18em;text-transform:uppercase;
+  font-size:clamp(20px,3.4vw,30px);
+  color:var(--emas-terang);font-weight:700;margin-bottom:16px;position:relative;z-index:2;
+  text-shadow:0 2px 14px rgba(0,0,0,.55);
+}
+.hero .eyebrow .kota{
+  display:block;margin-top:6px;
+  font-family:'Cinzel',serif;font-weight:600;
+  font-size:clamp(16px,2.6vw,24px);letter-spacing:.34em;
+  color:var(--krem);
+}
+.hero h1{
+  font-family:'Cinzel',serif;font-weight:700;
+  font-size:clamp(28px,5vw,46px);line-height:1.15;
+  color:var(--krem);position:relative;z-index:2;
+  text-shadow:0 2px 18px rgba(0,0,0,.6);
+}
+.hero h1 span{color:var(--emas-terang)}
+.hero .sub{
+  margin-top:14px;font-size:16px;color:var(--krem-2);
+  max-width:600px;margin-left:auto;margin-right:auto;position:relative;z-index:2;
+}
+.tagline{
+  display:inline-block;margin-top:22px;padding:8px 22px;
+  border:1px solid var(--emas);border-radius:50px;
+  font-size:13px;letter-spacing:.08em;color:var(--emas-terang);
+  background:rgba(212,164,55,.08);position:relative;z-index:2;
+}
 
-        .slide {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 1s ease;
-        }
+/* ====== NEXT EVENT highlight ====== */
+.next-card{
+  margin:-30px auto 0;max-width:920px;position:relative;z-index:5;
+  background:linear-gradient(135deg,var(--merah),var(--merah-tua));
+  border:2px solid var(--emas);border-radius:22px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.next-card .ribbon{
+  background:var(--emas);color:var(--hitam);
+  font-weight:800;letter-spacing:.2em;font-size:11px;text-transform:uppercase;
+  text-align:center;padding:7px;
+}
+.next-body{padding:26px 28px;display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:720px){.next-body{grid-template-columns:auto 1fr}}
+.next-date{
+  text-align:center;background:rgba(0,0,0,.22);border-radius:16px;
+  padding:18px 26px;border:1px dashed rgba(240,205,107,.5);
+  align-self:start;min-width:150px;
+}
+.next-date .d{font-family:'Cinzel',serif;font-size:46px;font-weight:700;color:var(--emas-terang);line-height:1}
+.next-date .m{text-transform:uppercase;letter-spacing:.2em;font-size:13px;margin-top:6px;color:var(--krem)}
+.next-date .y{font-size:12px;opacity:.75;margin-top:2px}
+.next-meta{display:grid;gap:12px}
+.next-meta .row{display:flex;align-items:flex-start;gap:12px}
+.next-meta .ic{font-size:18px;width:28px;flex:none;text-align:center}
+.next-meta .lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--emas-terang);opacity:.85}
+.next-meta .val{font-size:16px;font-weight:600;color:var(--krem)}
+.countdown{
+  display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;
+}
+.cd-box{background:rgba(0,0,0,.28);border-radius:10px;padding:8px 12px;text-align:center;min-width:58px}
+.cd-box b{display:block;font-family:'Cinzel',serif;font-size:22px;color:var(--emas-terang)}
+.cd-box small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
 
-        .slide.active {
-            display: flex;
-        }
+/* ====== SECTION TITLE ====== */
+.section{padding:54px 0 10px}
+.sec-head{text-align:center;margin-bottom:34px}
+.sec-head .kicker{letter-spacing:.34em;text-transform:uppercase;font-size:11px;color:var(--emas);font-weight:700}
+.sec-head h2{font-family:'Cinzel',serif;font-size:clamp(22px,3.6vw,32px);color:var(--krem);margin-top:8px}
+.sec-head .line{width:90px;height:3px;margin:14px auto 0;background:linear-gradient(90deg,transparent,var(--emas),transparent)}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
+/* ====== TOOLBAR ====== */
+.toolbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.btn{
+  font-family:inherit;cursor:pointer;border:none;border-radius:50px;
+  padding:11px 22px;font-weight:700;font-size:14px;letter-spacing:.02em;
+  transition:transform .18s, box-shadow .18s, background .2s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(135deg,var(--emas-terang),var(--emas));color:var(--hitam);box-shadow:0 8px 20px rgba(212,164,55,.3)}
+.btn-ghost{background:transparent;color:var(--emas-terang);border:1.5px solid var(--emas)}
+.btn-red{background:linear-gradient(135deg,var(--merah),var(--merah-tua));color:var(--krem)}
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--silver);
-            margin-bottom: 10px;
-        }
+/* ====== MODE / KEAMANAN ====== */
+.mode-bar{display:flex;justify-content:center;margin-bottom:14px}
+.mode-pill{
+  font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:7px 18px;border-radius:50px;display:inline-flex;align-items:center;gap:7px;
+}
+.mode-pill.view{background:rgba(255,255,255,.06);color:#b6a98a;border:1px solid rgba(212,164,55,.25)}
+.mode-pill.admin{background:rgba(47,93,79,.35);color:var(--krem);border:1px solid var(--hijau)}
+body:not(.is-admin) .admin-only{display:none!important}
+body:not(.is-admin) .card-actions{display:none}
 
-        h2 {
-            font-weight: 400;
-            letter-spacing: 2px;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
+/* ====== SCHEDULE CARDS ====== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.card{
+  position:relative;background:linear-gradient(160deg,var(--hitam-2),#14100c);
+  border:1px solid rgba(212,164,55,.28);border-radius:18px;
+  padding:22px 22px 20px;box-shadow:0 12px 30px rgba(0,0,0,.4);
+  transition:transform .2s, border-color .2s;overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:5px;
+  background:repeating-linear-gradient(90deg,var(--emas) 0 8px,var(--merah) 8px 16px);
+  opacity:.9;
+}
+.card:hover{transform:translateY(-5px);border-color:var(--emas)}
+.card.is-next{border-color:var(--emas);box-shadow:0 0 0 2px rgba(212,164,55,.35),0 16px 36px rgba(0,0,0,.5)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.date-chip{
+  background:rgba(212,164,55,.12);border:1px solid rgba(212,164,55,.4);
+  border-radius:12px;padding:8px 12px;text-align:center;flex:none;
+}
+.date-chip .d{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--emas-terang);line-height:1}
+.date-chip .m{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--krem-2)}
+.badge{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;border-radius:50px;align-self:center}
+.badge.upcoming{background:var(--hijau);color:var(--krem)}
+.badge.next{background:var(--emas);color:var(--hitam)}
+.badge.past{background:rgba(255,255,255,.08);color:#9c907a}
+.session-no{font-size:12px;color:var(--emas);letter-spacing:.1em;font-weight:700;margin-bottom:2px}
+.host{font-family:'Cinzel',serif;font-size:21px;color:var(--krem);margin-bottom:2px}
+.host-sub{font-size:13px;color:#b6a98a}
+.roles{margin-top:16px;display:grid;gap:10px}
+.role{display:flex;align-items:center;gap:11px;font-size:14px}
+.role .ic{
+  width:34px;height:34px;border-radius:10px;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  background:rgba(158,27,27,.22);border:1px solid rgba(212,164,55,.3);
+}
+.role .meta .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--emas);opacity:.85}
+.role .meta .n{font-weight:600;color:var(--krem)}
+.card-actions{margin-top:18px;display:flex;gap:8px;justify-content:flex-end}
+.icon-btn{
+  background:rgba(255,255,255,.05);border:1px solid rgba(212,164,55,.25);
+  color:var(--emas-terang);border-radius:9px;padding:7px 12px;cursor:pointer;
+  font-size:13px;font-family:inherit;transition:background .2s,transform .15s;
+}
+.icon-btn:hover{background:rgba(212,164,55,.18);transform:translateY(-1px)}
+.icon-btn.del:hover{background:rgba(158,27,27,.3)}
 
-        /* Update: Lingkaran menjadi Bingkai Foto */
-        .photo-frame {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 3px solid var(--gold-accent);
-            margin: 20px auto 10px;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* ====== EMPTY ====== */
+.empty{text-align:center;padding:50px 20px;color:#9c907a;font-style:italic}
 
-        .photo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+/* ====== MODAL ====== */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(10,7,5,.78);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:20px;z-index:100;
+}
+.modal-bg.show{display:flex}
+.modal{
+  width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
+  background:linear-gradient(160deg,#221a14,#14100c);
+  border:2px solid var(--emas);border-radius:20px;box-shadow:var(--shadow);
+}
+.modal-head{
+  background:linear-gradient(135deg,var(--merah),var(--merah-tua));
+  padding:18px 24px;border-bottom:2px solid var(--emas);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-head h3{font-family:'Cinzel',serif;color:var(--krem);font-size:19px}
+.modal-head .x{background:none;border:none;color:var(--krem);font-size:24px;cursor:pointer;line-height:1}
+.modal-body{padding:24px}
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--emas-terang);margin-bottom:7px;font-weight:700}
+.fld input{
+  width:100%;padding:12px 14px;border-radius:11px;font-family:inherit;font-size:15px;
+  background:rgba(0,0,0,.3);border:1px solid rgba(212,164,55,.3);color:var(--krem);
+  transition:border-color .2s,box-shadow .2s;
+}
+.fld input:focus{outline:none;border-color:var(--emas);box-shadow:0 0 0 3px rgba(212,164,55,.18)}
+.fld input::placeholder{color:#7d715c}
+.fld-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
 
-        /* Teks Umur di bawah foto */
-        .age-text {
-            font-size: 2.5rem;
-            font-family: 'Playfair Display', serif;
-            color: var(--gold-accent);
-            margin-bottom: 5px;
-        }
+/* ====== FOOTER ====== */
+.foot{
+  margin-top:60px;text-align:center;padding:40px 20px;
+  border-top:2px solid var(--emas);background:rgba(0,0,0,.3);
+}
+.foot .horas{font-family:'Cinzel',serif;font-size:22px;color:var(--emas-terang);letter-spacing:.3em}
+.foot p{font-size:13px;color:#9c907a;margin-top:10px}
 
-        .verse-container {
-            font-style: italic;
-            line-height: 1.8;
-            font-size: 1rem;
-            padding: 0 20px;
-        }
+/* ====== TOAST ====== */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+  background:var(--hijau);color:var(--krem);padding:14px 26px;border-radius:50px;
+  font-weight:600;box-shadow:var(--shadow);z-index:200;transition:transform .35s;
+  border:1px solid var(--emas);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--merah)}
 
-        .verse-ref {
-            display: block;
-            margin-top: 15px;
-            color: var(--gold-accent);
-            font-weight: bold;
-        }
-
-        .btn {
-            background: transparent;
-            border: 2px solid var(--silver);
-            color: var(--silver);
-            padding: 10px 30px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
-            margin-top: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .btn:hover {
-            background: var(--silver);
-            color: var(--deep-blue);
-        }
-
-        .btn-primary {
-            background: var(--gold-accent);
-            border-color: var(--gold-accent);
-            color: var(--deep-blue);
-            font-weight: bold;
-        }
-        
-        .progress-dots {
-            position: absolute;
-            bottom: 30px;
-            display: flex;
-            gap: 10px;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-        }
-        .dot.active {
-            background: var(--silver);
-        }
-        
-    </style>
+@media(max-width:640px){
+  .next-date{min-width:auto}
+  .fld-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-    <audio id="bg-music" loop preload="auto">
-        <source src="happy_birthday.mp3" type="audio/mpeg">
-        <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/6/61/Happy_Birthday_to_You_-_instrumental.ogg/Happy_Birthday_to_You_-_instrumental.ogg.mp3" type="audio/mpeg">
-    </audio>
+<div class="gorga-band"></div>
 
-    <div class="card-frame">
-        
-        <div class="slide active" id="slide-1">
-            <h1 style="font-size: 2rem;">Kartu Ucapan</h1>
-            <p>Spesial untuk:</p>
-            <h2 id="name-display-1" style="color: var(--gold-accent); font-size: 1.5rem;">[Nama]</h2>
-            <button class="btn btn-primary" onclick="startExperience()">Buka Kartu</button>
-        </div>
+<!-- HERO -->
+<header class="hero">
+  <div class="crest" id="crest" onclick="secretTap()" title="">🏛️</div>
+  <div class="eyebrow">Tupuan Girsang Wilayah 3<span class="kota">Tangerang</span></div>
+  <h1>Jadwal Arisan &amp; <span>Kebaktian</span><br>Girsang Boru Panagolan</h1>
+  <p class="sub">Informasi resmi jadwal arisan keluarga besar: tuan rumah, pembawa acara, dan pembawa renungan. Mari kita hadir dan saling menguatkan dalam kekeluargaan.</p>
+  <div class="tagline">✦ Sada Anak, Sada Boru — Sahuta Sasada ✦</div>
+</header>
 
-        <div class="slide" id="slide-2">
-            <h1>Selamat Ulang Tahun</h1>
-            
-            <div class="photo-frame">
-                <img src="profil.jpg" alt="Profil">
-            </div>
-
-            <div class="age-text" id="age-display">XX</div>
-            
-            <p>Tahun Berkat & Penyertaan Tuhan</p>
-            <button class="btn" onclick="nextSlide(3)">Lihat Ayat >> </button>
-        </div>
-
-        <div class="slide" id="slide-3">
-            <div class="verse-container">
-                "Lord, thank You for guiding my life until today. The Lord will fulfill His purpose for me."
-                <span class="verse-ref">Mazmur 138:8</span>
-            </div>
-            <button class="btn" onclick="nextSlide(4)">Lanjut >> </button>
-        </div>
-
-        <div class="slide" id="slide-4">
-            <p>Tuhan Yesus Memberkati senantiasa dengan kesehatan dan sukacita.</p>
-            <br>
-            <hr style="width: 50%; opacity: 0.3;">
-            <br>
-            <p style="font-size: 0.9rem;">Salam Kasih,</p>
-            <h3 id="sender-display" style="color: var(--gold-accent);">[Pengirim]</h3>
-            <button class="btn" onclick="nextSlide(1)">Ulangi</button>
-        </div>
-
-        <div class="progress-dots">
-            <div class="dot active" id="dot-1"></div>
-            <div class="dot" id="dot-2"></div>
-            <div class="dot" id="dot-3"></div>
-            <div class="dot" id="dot-4"></div>
-        </div>
+<!-- NEXT EVENT -->
+<div class="wrap">
+  <div class="next-card" id="nextCard" style="display:none">
+    <div class="ribbon">⟡ Arisan Berikutnya ⟡</div>
+    <div class="next-body">
+      <div class="next-date">
+        <div class="d" id="nxD">--</div>
+        <div class="m" id="nxM">---</div>
+        <div class="y" id="nxY">----</div>
+      </div>
+      <div class="next-meta">
+        <div class="row"><div class="ic">🏠</div><div><div class="lbl">Tuan Rumah</div><div class="val" id="nxHost">-</div></div></div>
+        <div class="row"><div class="ic">🎙️</div><div><div class="lbl">Pembawa Acara (MC)</div><div class="val" id="nxMc">-</div></div></div>
+        <div class="row"><div class="ic">📖</div><div><div class="lbl">Pembawa Renungan</div><div class="val" id="nxRen">-</div></div></div>
+        <div class="row"><div class="ic">📍</div><div><div class="lbl">Alamat / Waktu</div><div class="val" id="nxLoc">-</div></div></div>
+        <div class="countdown" id="countdown"></div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        const config = {
-            nama: "Celindy Odelia Purba",
-            umur: "Cheers to another year of life and blessings", // Sesuaikan umur di sini
-            pengirim: "St. Robert Manihuruk/br. Girsang"
-        };
+<!-- SCHEDULE -->
+<section class="section wrap">
+  <div class="sec-head">
+    <div class="kicker">Daftar Lengkap</div>
+    <h2>Jadwal Pertemuan</h2>
+    <div class="line"></div>
+  </div>
 
-        document.getElementById('name-display-1').innerText = config.nama;
-        document.getElementById('age-display').innerText = config.umur;
-        document.getElementById('sender-display').innerText = config.pengirim;
+  <div class="mode-bar" id="modeBar">
+    <span class="mode-pill view" id="modePill">🔒 Mode Lihat Saja</span>
+    <span class="mode-pill" id="connPill" style="margin-left:8px;background:rgba(255,255,255,.06);color:#b6a98a;border:1px solid rgba(212,164,55,.25)">⟳ Menyambung…</span>
+  </div>
+  <div class="toolbar">
+    <button class="btn btn-gold admin-only" onclick="openForm()">＋ Tambah Jadwal</button>
+    <button class="btn btn-ghost admin-only" onclick="exportData()">⬇ Simpan Cadangan</button>
+    <button class="btn btn-ghost admin-only" onclick="document.getElementById('importFile').click()">⬆ Muat Cadangan</button>
+    <input type="file" id="importFile" accept=".json" hidden onchange="importData(event)">
+    <button class="btn btn-ghost" id="lockBtn" onclick="toggleAdmin()" style="display:none">🔑 Masuk Pengurus</button>
+    <button class="btn btn-red admin-only" onclick="openPinChange()">🔐 Ganti Sandi</button>
+  </div>
 
-        const music = document.getElementById('bg-music');
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">Belum ada jadwal. Klik “Tambah Jadwal” untuk memulai.</div>
+</section>
 
-        function startExperience() {
-            attemptPlayMusic();
-            nextSlide(2);
-        }
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="horas">H O R A S</div>
+  <p>Girsang Boru Panagolan Tangerang — Punguan Keluarga Besar</p>
+  <p>Halaman ini dapat disebarkan ke seluruh anggota. Jadwal tersimpan terpusat & tersinkron otomatis ke semua perangkat.</p>
+</footer>
 
-        function attemptPlayMusic() {
-            music.volume = 1.0; 
-            music.muted = false;
-            var promise = music.play();
-            if (promise !== undefined) {
-                promise.then(_ => {}).catch(error => {
-                    console.log("Autoplay dicegah.");
-                });
-            }
-        }
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Tambah Jadwal Arisan</h3>
+      <button class="x" onclick="closeForm()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="fld">
+        <label>Tanggal Pertemuan</label>
+        <input type="date" id="fDate">
+      </div>
+      <div class="fld">
+        <label>Label Pertemuan (opsional)</label>
+        <input type="text" id="fLabel" placeholder="cth: Pertemuan ke-5 / Arisan Akbar / Natal Bersama">
+      </div>
+      <div class="fld-grid">
+        <div class="fld">
+          <label>Tuan Rumah</label>
+          <input type="text" id="fHost" placeholder="cth: Kel. Op. Sari Girsang">
+        </div>
+        <div class="fld">
+          <label>Waktu</label>
+          <input type="text" id="fTime" placeholder="cth: 16.00 WIB">
+        </div>
+      </div>
+      <div class="fld">
+        <label>Alamat</label>
+        <input type="text" id="fAddr" placeholder="cth: Jl. Mawar No. 12, Cipondoh">
+      </div>
+      <div class="fld-grid">
+        <div class="fld">
+          <label>Pembawa Acara (MC)</label>
+          <input type="text" id="fMc" placeholder="Nama MC">
+        </div>
+        <div class="fld">
+          <label>Pembawa Renungan</label>
+          <input type="text" id="fRen" placeholder="Nama pembawa renungan">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" onclick="closeForm()">Batal</button>
+        <button class="btn btn-gold" onclick="saveItem()">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        function nextSlide(slideIndex) {
-            document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.dot').forEach(el => el.classList.remove('active'));
-            document.getElementById('slide-' + slideIndex).classList.add('active');
-            document.getElementById('dot-' + slideIndex).classList.add('active');
-        }
-    </script>
+<!-- MODAL LOGIN PENGURUS -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head">
+      <h3>🔑 Login Pengurus</h3>
+      <button class="x" onclick="closeLogin()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fld">
+        <label>Email Pengurus</label>
+        <input type="email" id="lgEmail" placeholder="email@contoh.com" autocomplete="username">
+      </div>
+      <div class="fld">
+        <label>Kata Sandi</label>
+        <input type="password" id="lgPass" placeholder="••••••••" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" onclick="closeLogin()">Batal</button>
+        <button class="btn btn-gold" id="lgBtn" onclick="doLogin()">Masuk</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ====== KONFIGURASI FIREBASE ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCqF5VG2T03yaHOAq8dPhtvgMYrbVq-DIs",
+  authDomain: "girsangborupanagolantangerang.firebaseapp.com",
+  databaseURL: "https://girsangborupanagolantangerang-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "girsangborupanagolantangerang",
+  storageBucket: "girsangborupanagolantangerang.firebasestorage.app",
+  messagingSenderId: "823404152768",
+  appId: "1:823404152768:web:c743fa07b22455452b2a25",
+  measurementId: "G-716P2TK99Y"
+};
+const NODE='arisan_landing';        /* node terpisah khusus halaman ini */
+const BULAN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+let db=null, auth=null, dbReady=false;
+let isAdmin=false;
+let data=[];
+
+/* ---- inisialisasi Firebase ---- */
+try{
+  firebase.initializeApp(firebaseConfig);
+  db=firebase.database();
+  auth=firebase.auth();
+  dbReady=true;
+}catch(e){console.error('Firebase init gagal:',e);dbReady=false;}
+
+function setConn(state){
+  const p=document.getElementById('connPill');if(!p)return;
+  if(state==='on'){p.textContent='● Tersambung';p.style.color='#7fd6b5';p.style.borderColor='var(--hijau)';}
+  else if(state==='off'){p.textContent='⚠ Tidak tersambung';p.style.color='#e7b3b3';p.style.borderColor='var(--merah)';}
+  else{p.textContent='⟳ Menyambung…';p.style.color='#b6a98a';}
+}
+
+/* ---- data awal (hanya dipakai jika database masih kosong) ---- */
+function seed(){
+  const base=new Date();
+  const mk=(addDays,label,host,mc,ren,addr,time)=>{
+    const d=new Date(base); d.setDate(d.getDate()+addDays);
+    return {id:crypto.randomUUID(),date:d.toISOString().split('T')[0],label,host,mc,ren,addr,time};
+  };
+  return [
+    mk(7,'','Kel. Op. Sari Girsang','St. M. Girsang','Pdt. R. Saragih','Jl. Mawar No. 12, Cipondoh','16.00 WIB'),
+    mk(38,'','Kel. J. Sinaga / br Girsang','Ny. T. Damanik','Gr. P. Purba','Perum Modern, Kelapa Dua','16.30 WIB'),
+    mk(69,'','Kel. B. Girsang','Bp. H. Girsang','St. L. Sipayung','Jl. Melati Raya, Karawaci','16.00 WIB'),
+  ];
+}
+
+/* ---- baca data realtime dari Firebase ---- */
+function load(){
+  if(!dbReady){
+    setConn('off');
+    data=seed();render();
+    toast('Database tidak tersambung — menampilkan contoh',true);
+    return;
+  }
+  /* status koneksi */
+  db.ref('.info/connected').on('value',s=>{ setConn(s.val()?'on':'off'); });
+
+  /* daftar jadwal tersinkron — otomatis update di semua perangkat */
+  db.ref(NODE+'/items').on('value',s=>{
+    const val=s.val();
+    if(val===null){
+      /* database kosong: isi dengan contoh sekali saja */
+      const seeded=seed();
+      db.ref(NODE+'/items').set(seeded).catch(()=>{});
+      data=seeded;
+    }else{
+      data=Array.isArray(val)?val.filter(Boolean):Object.values(val);
+    }
+    render();
+  },err=>{ setConn('off'); toast('Gagal membaca data: '+err.code,true); });
+}
+
+/* ---- tulis seluruh daftar ke Firebase ---- */
+function save(){
+  if(!dbReady){toast('Tidak tersambung ke database',true);return;}
+  db.ref(NODE+'/items').set(data).catch(e=>toast('Gagal menyimpan: '+e.code,true));
+}
+
+
+/* ---- keamanan: Login Pengurus (Firebase Auth) ---- */
+let tapCount=0, tapTimer=null;
+function secretTap(){
+  if(isAdmin)return;                 /* sudah login, tak perlu */
+  tapCount++;
+  clearTimeout(tapTimer);
+  tapTimer=setTimeout(()=>{tapCount=0;},1200);   /* reset jika jeda > 1.2 dtk */
+  if(tapCount>=3){
+    tapCount=0;clearTimeout(tapTimer);
+    const lock=document.getElementById('lockBtn');
+    lock.style.display='inline-flex';
+    document.getElementById('grid').scrollIntoView({behavior:'smooth',block:'start'});
+    toast('Akses pengurus terbuka — silakan masuk');
+  }
+}
+
+/* tombol: kalau sudah login -> logout; kalau belum -> buka modal login */
+function toggleAdmin(){
+  if(isAdmin){
+    auth.signOut().then(()=>toast('Keluar dari mode pengurus'))
+      .catch(e=>toast('Gagal keluar: '+e.code,true));
+    return;
+  }
+  openLogin();
+}
+
+/* pantau status login dari Firebase — sumber kebenaran tunggal */
+function watchAuth(){
+  if(!dbReady){return;}
+  auth.onAuthStateChanged(u=>{
+    isAdmin=!!u;
+    applyMode();
+  });
+}
+
+function applyMode(){
+  document.body.classList.toggle('is-admin',isAdmin);
+  const pill=document.getElementById('modePill');
+  const lock=document.getElementById('lockBtn');
+  if(isAdmin){
+    pill.className='mode-pill admin';pill.textContent='🔓 Mode Pengurus';
+    lock.style.display='inline-flex';lock.textContent='🚪 Keluar Pengurus';
+  }else{
+    pill.className='mode-pill view';pill.textContent='🔒 Mode Lihat Saja';
+    lock.textContent='🔑 Masuk Pengurus';lock.style.display='none';   /* sembunyi lagi */
+  }
+}
+function requireAdmin(){
+  if(isAdmin)return true;
+  toast('Akses khusus pengurus. Masuk dulu.',true);
+  return false;
+}
+
+/* ---- modal login ---- */
+function openLogin(){
+  document.getElementById('lgEmail').value='';
+  document.getElementById('lgPass').value='';
+  document.getElementById('loginModal').classList.add('show');
+  setTimeout(()=>document.getElementById('lgEmail').focus(),100);
+}
+function closeLogin(){document.getElementById('loginModal').classList.remove('show')}
+function doLogin(){
+  const email=document.getElementById('lgEmail').value.trim();
+  const pass=document.getElementById('lgPass').value;
+  if(!email||!pass){toast('Email & sandi wajib diisi',true);return;}
+  const btn=document.getElementById('lgBtn');
+  btn.disabled=true;btn.textContent='Memproses…';
+  auth.signInWithEmailAndPassword(email,pass)
+    .then(()=>{closeLogin();toast('Mode pengurus aktif');})
+    .catch(e=>{
+      const msg=({'auth/invalid-credential':'Email atau sandi salah',
+        'auth/invalid-email':'Format email tidak valid',
+        'auth/user-not-found':'Akun tidak ditemukan',
+        'auth/wrong-password':'Sandi salah',
+        'auth/too-many-requests':'Terlalu banyak percobaan, coba lagi nanti'}[e.code])||('Gagal masuk: '+e.code);
+      toast(msg,true);
+    })
+    .finally(()=>{btn.disabled=false;btn.textContent='Masuk';});
+}
+
+/* ---- ganti sandi pengurus ---- */
+function openPinChange(){
+  if(!requireAdmin())return;
+  const baru=prompt('Masukkan sandi baru (minimal 6 karakter):');
+  if(baru===null)return;
+  if(baru.length<6){toast('Sandi minimal 6 karakter',true);return;}
+  const ulang=prompt('Ulangi sandi baru:');
+  if(ulang===null)return;
+  if(baru!==ulang){toast('Sandi baru tidak cocok',true);return;}
+  auth.currentUser.updatePassword(baru)
+    .then(()=>toast('Sandi berhasil diganti'))
+    .catch(e=>{
+      if(e.code==='auth/requires-recent-login'){
+        toast('Demi keamanan, keluar lalu masuk lagi sebelum ganti sandi',true);
+      }else toast('Gagal ganti sandi: '+e.code,true);
+    });
+}
+
+function fmt(dateStr){
+  const d=new Date(dateStr+'T00:00:00');
+  return {d:d.getDate(),m:BULAN[d.getMonth()],y:d.getFullYear(),full:`${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`};
+}
+function startOfToday(){const t=new Date();t.setHours(0,0,0,0);return t}
+
+function render(){
+  data.sort((a,b)=>a.date.localeCompare(b.date));
+  const today=startOfToday();
+  const upcoming=data.filter(x=>new Date(x.date+'T00:00:00')>=today);
+  const nextItem=upcoming[0]||null;
+
+  /* next card */
+  const nc=document.getElementById('nextCard');
+  if(nextItem){
+    nc.style.display='block';
+    const f=fmt(nextItem.date);
+    nxD.textContent=f.d; nxM.textContent=f.m; nxY.textContent=f.y;
+    nxHost.textContent=nextItem.host||'-';
+    nxMc.textContent=nextItem.mc||'-';
+    nxRen.textContent=nextItem.ren||'-';
+    nxLoc.textContent=[nextItem.addr,nextItem.time].filter(Boolean).join(' • ')||'-';
+    runCountdown(nextItem.date);
+  }else nc.style.display='none';
+
+  /* grid */
+  const g=document.getElementById('grid');
+  g.innerHTML='';
+  document.getElementById('empty').style.display=data.length?'none':'block';
+
+  data.forEach((x,i)=>{
+    const f=fmt(x.date);
+    const dt=new Date(x.date+'T00:00:00');
+    let status='upcoming',label='Akan Datang';
+    if(dt<today){status='past';label='Selesai'}
+    if(nextItem&&x.id===nextItem.id){status='next';label='Berikutnya'}
+    const card=document.createElement('div');
+    card.className='card'+(status==='next'?' is-next':'');
+    card.innerHTML=`
+      <div class="card-top">
+        <div class="date-chip"><div class="d">${f.d}</div><div class="m">${f.m} ${f.y}</div></div>
+        <span class="badge ${status}">${label}</span>
+      </div>
+      <div class="session-no">${esc(x.label)||('PERTEMUAN KE-'+(i+1))}</div>
+      <div class="host">${esc(x.host)||'Tuan Rumah'}</div>
+      <div class="host-sub">${[esc(x.addr),esc(x.time)].filter(Boolean).join(' • ')||'—'}</div>
+      <div class="roles">
+        <div class="role"><div class="ic">🎙️</div><div class="meta"><div class="l">Pembawa Acara</div><div class="n">${esc(x.mc)||'—'}</div></div></div>
+        <div class="role"><div class="ic">📖</div><div class="meta"><div class="l">Pembawa Renungan</div><div class="n">${esc(x.ren)||'—'}</div></div></div>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" onclick="editItem('${x.id}')">✎ Ubah</button>
+        <button class="icon-btn del" onclick="delItem('${x.id}')">🗑 Hapus</button>
+      </div>`;
+    g.appendChild(card);
+  });
+}
+
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+let cdTimer=null;
+function runCountdown(dateStr){
+  clearInterval(cdTimer);
+  const target=new Date(dateStr+'T00:00:00').getTime();
+  const box=document.getElementById('countdown');
+  const tick=()=>{
+    const diff=target-Date.now();
+    if(diff<=0){box.innerHTML='<div class="cd-box" style="min-width:auto;padding:8px 16px"><b>Hari Ini!</b></div>';clearInterval(cdTimer);return}
+    const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5),m=Math.floor(diff%36e5/6e4);
+    box.innerHTML=`
+      <div class="cd-box"><b>${d}</b><small>Hari</small></div>
+      <div class="cd-box"><b>${h}</b><small>Jam</small></div>
+      <div class="cd-box"><b>${m}</b><small>Menit</small></div>`;
+  };
+  tick();cdTimer=setInterval(tick,30000);
+}
+
+/* ---- form ---- */
+function openForm(){
+  if(!requireAdmin())return;
+  document.getElementById('editId').value='';
+  document.getElementById('modalTitle').textContent='Tambah Jadwal Arisan';
+  ['fDate','fLabel','fHost','fTime','fAddr','fMc','fRen'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('modal').classList.add('show');
+}
+function editItem(id){
+  if(!requireAdmin())return;
+  const x=data.find(d=>d.id===id);if(!x)return;
+  document.getElementById('editId').value=id;
+  document.getElementById('modalTitle').textContent='Ubah Jadwal Arisan';
+  fDate.value=x.date;fLabel.value=x.label||'';fHost.value=x.host||'';fTime.value=x.time||'';
+  fAddr.value=x.addr||'';fMc.value=x.mc||'';fRen.value=x.ren||'';
+  document.getElementById('modal').classList.add('show');
+}
+function closeForm(){document.getElementById('modal').classList.remove('show')}
+
+function saveItem(){
+  if(!requireAdmin())return;
+  const id=document.getElementById('editId').value;
+  const obj={
+    date:fDate.value,label:fLabel.value.trim(),host:fHost.value.trim(),time:fTime.value.trim(),
+    addr:fAddr.value.trim(),mc:fMc.value.trim(),ren:fRen.value.trim()
+  };
+  if(!obj.date){toast('Tanggal wajib diisi',true);return}
+  if(!obj.host){toast('Tuan rumah wajib diisi',true);return}
+  if(id){Object.assign(data.find(d=>d.id===id),obj)}
+  else{obj.id=crypto.randomUUID();data.push(obj)}
+  save();render();closeForm();toast(id?'Jadwal diperbarui':'Jadwal ditambahkan');
+}
+function delItem(id){
+  if(!requireAdmin())return;
+  if(!confirm('Hapus jadwal ini?'))return;
+  data=data.filter(d=>d.id!==id);save();render();toast('Jadwal dihapus');
+}
+
+/* ---- backup ---- */
+function exportData(){
+  if(!requireAdmin())return;
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='jadwal-arisan-girsang.json';a.click();
+  toast('Cadangan diunduh');
+}
+function importData(e){
+  if(!requireAdmin()){e.target.value='';return;}
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const arr=JSON.parse(r.result);if(Array.isArray(arr)){data=arr;save();render();toast('Cadangan dimuat')}else toast('Format tidak sesuai',true)}catch{toast('Gagal membaca file',true)}};
+  r.readAsText(file);e.target.value='';
+}
+
+/* ---- toast ---- */
+let tT=null;
+function toast(msg,err){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(err?' err':'');
+  clearTimeout(tT);tT=setTimeout(()=>t.className='toast',2600);
+}
+
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeForm()});
+document.getElementById('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin()});
+watchAuth();applyMode();render();load();
+</script>
 </body>
 </html>
