@@ -262,6 +262,45 @@ body:not(.is-admin) .card-actions{display:none}
 .foot .horas{font-family:'Cinzel',serif;font-size:22px;color:var(--emas-terang);letter-spacing:.3em}
 .foot p{font-size:13px;color:#9c907a;margin-top:10px}
 
+/* ====== MUSIK PLAYER MENGAMBANG ====== */
+.music-fab{
+  position:fixed;right:18px;bottom:20px;z-index:150;
+  display:flex;align-items:center;gap:0;
+  background:linear-gradient(135deg,var(--merah),var(--merah-tua));
+  border:2px solid var(--emas);border-radius:50px;
+  box-shadow:var(--shadow);cursor:pointer;
+  padding:0;overflow:hidden;transition:gap .3s,padding .3s;
+}
+.music-fab .mf-btn{
+  width:54px;height:54px;flex:none;border:none;background:transparent;
+  color:var(--emas-terang);font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.music-fab .mf-label{
+  white-space:nowrap;color:var(--krem);font-size:12px;font-weight:600;
+  letter-spacing:.04em;max-width:0;opacity:0;overflow:hidden;
+  transition:max-width .35s,opacity .3s,padding .3s;padding:0;
+}
+.music-fab.show-label .mf-label{max-width:160px;opacity:1;padding-right:18px}
+.music-fab:hover .mf-label{max-width:160px;opacity:1;padding-right:14px}
+.music-fab.playing .mf-btn{animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.music-fab .mf-next{
+  width:0;border:none;background:transparent;color:var(--emas-terang);
+  font-size:16px;cursor:pointer;overflow:hidden;opacity:0;flex:none;
+  height:54px;padding:0;transition:width .3s,opacity .3s,padding .3s;
+}
+.music-fab:hover .mf-next,.music-fab.show-label .mf-next{width:34px;opacity:1;padding-right:8px}
+.music-fab .mf-next:hover{color:var(--krem)}
+.music-fab .eq{display:flex;align-items:flex-end;gap:2px;height:18px;padding-right:16px}
+.music-fab .eq span{width:3px;background:var(--emas-terang);border-radius:2px;height:5px}
+.music-fab.playing .eq span{animation:eqbar .9s ease-in-out infinite}
+.music-fab .eq span:nth-child(2){animation-delay:.2s}
+.music-fab .eq span:nth-child(3){animation-delay:.4s}
+.music-fab .eq span:nth-child(4){animation-delay:.1s}
+.music-fab:not(.playing) .eq span{height:5px;animation:none}
+@keyframes eqbar{0%,100%{height:5px}50%{height:16px}}
+
 /* ====== TOAST ====== */
 .toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
@@ -416,6 +455,15 @@ body:not(.is-admin) .card-actions{display:none}
       </div>
     </div>
   </div>
+</div>
+
+<!-- MUSIK LATAR (playlist) -->
+<audio id="bgAudio" preload="none"></audio>
+<div class="music-fab" id="musicFab" title="Putar / Jeda musik">
+  <button class="mf-btn" id="mfIcon" onclick="toggleMusic()">♪</button>
+  <div class="eq" onclick="toggleMusic()"><span></span><span></span><span></span><span></span></div>
+  <div class="mf-label" id="mfLabel" onclick="toggleMusic()">Lagu Simalungun</div>
+  <button class="mf-next" id="mfNext" onclick="nextTrack()" title="Lagu berikutnya">⏭</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -739,9 +787,68 @@ function toast(msg,err){
   clearTimeout(tT);tT=setTimeout(()=>t.className='toast',2600);
 }
 
+/* ---- musik latar (playlist) ---- */
+const PLAYLIST=[
+  {src:'Simalungun_Deideng.mp3',   judul:'Lagu Simalungun • Deideng'},
+  {src:'Simalungun_Sitalasari.mp3',judul:'Lagu Simalungun • Sitalasari'},
+  {src:'Simalungun_Tortor_Sahundulan.mp3',judul:'Lagu Simalungun • Tortor Sahundulan'}
+];
+const bgAudio=document.getElementById('bgAudio');
+const musicFab=document.getElementById('musicFab');
+const mfIcon=document.getElementById('mfIcon');
+const mfLabel=document.getElementById('mfLabel');
+let musicOn=false;
+let trackIdx=0;
+
+function loadTrack(i,autoplay){
+  trackIdx=(i+PLAYLIST.length)%PLAYLIST.length;
+  bgAudio.src=PLAYLIST[trackIdx].src;
+  mfLabel.textContent=PLAYLIST[trackIdx].judul;
+  if(autoplay){
+    bgAudio.play().then(()=>setMusicUI(true)).catch(()=>setMusicUI(false));
+  }
+}
+function setMusicUI(playing){
+  musicOn=playing;
+  musicFab.classList.toggle('playing',playing);
+  mfIcon.textContent=playing?'❚❚':'♪';
+}
+function toggleMusic(){
+  if(musicOn){
+    bgAudio.pause();setMusicUI(false);
+  }else{
+    bgAudio.play().then(()=>setMusicUI(true))
+      .catch(()=>toast('Ketuk sekali lagi untuk memutar musik',true));
+  }
+}
+function nextTrack(){
+  loadTrack(trackIdx+1,true);
+  /* tampilkan judul sebentar */
+  musicFab.classList.add('show-label');
+  setTimeout(()=>musicFab.classList.remove('show-label'),3000);
+}
+bgAudio.addEventListener('ended',()=>{ loadTrack(trackIdx+1,true); });  /* lanjut otomatis ke lagu berikutnya */
+bgAudio.addEventListener('pause',()=>{if(!bgAudio.ended)setMusicUI(false)});
+bgAudio.addEventListener('play',()=>setMusicUI(true));
+
+function initMusic(){
+  loadTrack(0,false);
+  setTimeout(()=>{
+    musicFab.classList.add('show-label');
+    setTimeout(()=>musicFab.classList.remove('show-label'),4200);
+  },900);
+  bgAudio.play().then(()=>setMusicUI(true)).catch(()=>{
+    const kick=()=>{
+      bgAudio.play().then(()=>setMusicUI(true)).catch(()=>{});
+      window.removeEventListener('pointerdown',kick);
+    };
+    window.addEventListener('pointerdown',kick,{once:true});
+  });
+}
+
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeForm()});
 document.getElementById('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin()});
-watchAuth();applyMode();render();load();
+watchAuth();applyMode();render();load();initMusic();
 </script>
 </body>
 </html>
